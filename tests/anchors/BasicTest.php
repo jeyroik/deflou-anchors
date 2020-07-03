@@ -2,6 +2,7 @@
 namespace tests\anchors;
 
 use deflou\components\anchors\Anchor;
+use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -11,6 +12,13 @@ use PHPUnit\Framework\TestCase;
  */
 class BasicTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $env = Dotenv::create(getcwd() . '/tests/');
+        $env->load();
+    }
+
     public function testGettersAndSetters()
     {
         $anchor = new Anchor();
