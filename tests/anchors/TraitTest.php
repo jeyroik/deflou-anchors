@@ -66,10 +66,10 @@ class TraitTest extends TestCase
 
     public function testHasJsonRpcAnchor()
     {
-        $item = $this->getItemWithJsonRpcAnchor('valid');
+        $item = $this->getItemWithJsonRpcAnchor('.valid');
         $this->assertNotEmpty($item->getJsonRpcAnchor());
 
-        $item = $this->getItemWithJsonRpcAnchor('invalid');
+        $item = $this->getItemWithJsonRpcAnchor('.invalid');
         $this->assertEmpty($item->getJsonRpcAnchor());
     }
 

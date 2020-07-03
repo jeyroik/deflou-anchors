@@ -87,7 +87,7 @@ class PluginsTest extends TestCase
         ]);
 
         $event = null;
-        $app = null;
+        $app = new Application();
         $plugin($event, $app);
         $this->assertNotEmpty($event);
 
@@ -96,7 +96,7 @@ class PluginsTest extends TestCase
         ]);
 
         $event = null;
-        $app = null;
+        $app = new Application();
         $plugin($event, $app);
         $this->assertEmpty($event);
     }
