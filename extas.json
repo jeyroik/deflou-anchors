@@ -1,0 +1,33 @@
+{
+  "name": "deflou/anchors",
+  "repositories": [
+    {
+      "name": "anchors",
+      "scope": "deflou",
+      "pk": "id",
+      "class": "deflou\\components\\anchors\\Anchor",
+      "aliases": ["anchors"]
+    }
+  ],
+  "plugins_install": [
+    {
+      "repository": "anchors",
+      "name": "anchor",
+      "section": "deflou_anchors"
+    }
+  ],
+  "plugins": [
+    {
+      "class": "extas\\components\\plugins\\repositories\\PluginFieldUuid",
+      "stage": "extas.anchors.create.before"
+    }
+  ],
+  "extensions": [
+    {
+      "class": "extas\\components\\extensions\\ExtensionRepositoryDescription",
+      "interface": "extas\\interfaces\\extensions\\IExtensionRepositoryDescription",
+      "subject": "*",
+      "methods": ["anchors"]
+    }
+  ]
+}
