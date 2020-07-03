@@ -33,7 +33,7 @@ class TraitTest extends TestCase
         $env->load();
         $this->turnSnuffLoggingOn();
         $this->createSnuffDynamicRepositories([
-            ['anchors', 'name', ApplicationSample::class]
+            ['anchors', 'name', Anchor::class]
         ]);
 
         $this->getMagicClass('anchors')->create(new Anchor([

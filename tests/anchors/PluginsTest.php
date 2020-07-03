@@ -35,7 +35,8 @@ class PluginsTest extends TestCase
         $this->createSnuffDynamicRepositories([
             ['anchors', 'name', Anchor::class],
             ['applications', 'name', Application::class],
-            ['activities', 'name', Activity::class]
+            ['activities', 'name', Activity::class],
+            ['deflouActivityRepository', 'name', Activity::class],
         ]);
 
         $this->getMagicClass('anchors')->create(new Anchor([
