@@ -3,7 +3,6 @@ namespace deflou\components\plugins\events;
 
 use deflou\components\anchors\THasJsonRpcAnchor;
 use deflou\interfaces\applications\IApplication;
-use extas\components\plugins\events\EventAppDetermine;
 
 /**
  * Class EventAppDetermineByAnchor
