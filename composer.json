@@ -16,7 +16,8 @@
     "phpstan/phpstan": "0.*",
     "jeyroik/extas-snuffbox": "0.*",
     "jeyroik/extas-snuffbox-repositories": "0.*",
-    "jeyroik/extas-snuffbox-loggers": "0.*"
+    "jeyroik/extas-snuffbox-loggers": "0.*",
+    "jeyroik/deflou-core": "*"
   },
   "autoload": {
     "psr-4": {
