@@ -4,7 +4,6 @@ namespace tests\anchors;
 use deflou\components\anchors\Anchor;
 use deflou\components\applications\activities\Activity;
 use deflou\components\applications\Application;
-use deflou\components\applications\ApplicationSample;
 use deflou\components\plugins\events\EventAppDetermineByAnchor;
 use deflou\components\plugins\events\EventDetermineByAnchor;
 
@@ -34,7 +33,7 @@ class PluginsTest extends TestCase
         $env->load();
         $this->turnSnuffLoggingOn();
         $this->createSnuffDynamicRepositories([
-            ['anchors', 'name', ApplicationSample::class],
+            ['anchors', 'name', Anchor::class],
             ['applications', 'name', Application::class],
             ['activities', 'name', Activity::class]
         ]);
@@ -65,7 +64,7 @@ class PluginsTest extends TestCase
     public function testAppDetermine()
     {
         $plugin = new EventAppDetermineByAnchor([
-            EventAppDetermineByAnchor::FIELD__PSR_REQUEST => $this->getPsrRequest('valid')
+            EventAppDetermineByAnchor::FIELD__PSR_REQUEST => $this->getPsrRequest('.valid')
         ]);
 
         $app = null;
@@ -73,7 +72,7 @@ class PluginsTest extends TestCase
         $this->assertNotEmpty($app);
 
         $plugin = new EventAppDetermineByAnchor([
-            EventAppDetermineByAnchor::FIELD__PSR_REQUEST => $this->getPsrRequest('invalid')
+            EventAppDetermineByAnchor::FIELD__PSR_REQUEST => $this->getPsrRequest('.invalid')
         ]);
 
         $app = null;
@@ -84,7 +83,7 @@ class PluginsTest extends TestCase
     public function testEventDetermine()
     {
         $plugin = new EventDetermineByAnchor([
-            EventAppDetermineByAnchor::FIELD__PSR_REQUEST => $this->getPsrRequest('valid')
+            EventAppDetermineByAnchor::FIELD__PSR_REQUEST => $this->getPsrRequest('.valid')
         ]);
 
         $event = null;
@@ -93,7 +92,7 @@ class PluginsTest extends TestCase
         $this->assertNotEmpty($event);
 
         $plugin = new EventDetermineByAnchor([
-            EventAppDetermineByAnchor::FIELD__PSR_REQUEST => $this->getPsrRequest('invalid')
+            EventAppDetermineByAnchor::FIELD__PSR_REQUEST => $this->getPsrRequest('.invalid')
         ]);
 
         $event = null;
