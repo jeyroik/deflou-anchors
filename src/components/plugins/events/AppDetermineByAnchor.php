@@ -3,28 +3,33 @@ namespace deflou\components\plugins\events;
 
 use deflou\components\anchors\THasAnchorData;
 use deflou\interfaces\anchors\IHasAnchorData;
-use deflou\interfaces\applications\activities\IActivity;
+use deflou\interfaces\applications\IApplication;
 use deflou\interfaces\servers\requests\IApplicationRequest;
 
 /**
- * Class EventDetermineByAnchor
+ * Class AppDetermineByAnchor
  *
  * @package deflou\components\plugins\events
  * @author jeyroik <jeyroik@gmail.com>
  */
-class EventDetermineByAnchor extends EventDetermine implements IHasAnchorData
+class AppDetermineByAnchor extends ApplicationDetermine implements IHasAnchorData
 {
     use THasAnchorData;
 
     /**
      * @param IApplicationRequest $request
-     * @return IActivity|null
+     * @return IApplication|null
      */
-    protected function dispatch(IApplicationRequest $request): ?IActivity
+    protected function dispatch(IApplicationRequest $request): ?IApplication
     {
         $data = $request->getParameterValue($request::PARAM__DATA, []);
         $anchor = $this->getAnchor($data);
 
-        return $anchor ? $anchor->getEvent() : null;
+        if ($anchor) {
+            $anchorEvent = $anchor->getEvent();
+            return $anchorEvent ? $anchorEvent->getApplication() : null;
+        }
+
+        return null;
     }
 }

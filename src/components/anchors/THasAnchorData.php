@@ -2,12 +2,12 @@
 namespace deflou\components\anchors;
 
 use deflou\interfaces\anchors\IAnchor;
+use deflou\interfaces\anchors\IHasAnchorData;
 use extas\components\exceptions\MissedOrUnknown;
-use extas\components\jsonrpc\THasJsonRpcRequest;
 use extas\interfaces\repositories\IRepository;
 
 /**
- * Trait THasJsonRpcAnchor
+ * Trait THasAnchorData
  *
  * @method IRepository anchors()
  * @method notice($message, array $context)
@@ -15,20 +15,15 @@ use extas\interfaces\repositories\IRepository;
  * @package deflou\components\anchors
  * @author jeyroik <jeyroik@gmail.com>
  */
-trait THasJsonRpcAnchor
+trait THasAnchorData
 {
-    use THasJsonRpcRequest;
-
     /**
+     * @param array $data
      * @return IAnchor|null
      */
-    public function getJsonRpcAnchor(): ?IAnchor
+    public function getAnchor(array $data): ?IAnchor
     {
-        /**
-         * @var $anchor IAnchor
-         */
-        $data = $this->getJsonRpcRequest()->getData();
-        $anchorId = $data['anchor'] ?? '';
+        $anchorId = $data[IHasAnchorData::FIELD__ANCHOR] ?? '';
         $anchor = $this->anchors()->one([IAnchor::FIELD__ID => $anchorId]);
 
         if (!$anchor) {

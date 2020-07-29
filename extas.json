@@ -20,6 +20,21 @@
     {
       "class": "extas\\components\\plugins\\repositories\\PluginFieldUuid",
       "stage": "extas.anchors.create.before"
+    },
+    {
+      "class": "deflou\\components\\plugins\\events\\AppDetermineByAnchor",
+      "stage": "deflou.application.determine",
+      "install_on": "install"
+    },
+    {
+      "class": "deflou\\components\\plugins\\events\\EventDetermineByAnchor",
+      "stage": "deflou.event.determine",
+      "install_on": "install"
+    },
+    {
+      "class": "deflou\\components\\plugins\\triggers\\ValidateTriggerByAnchor",
+      "stage": "deflou.is.valid.trigger",
+      "install_on": "install"
     }
   ],
   "extensions": [

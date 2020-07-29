@@ -4,12 +4,15 @@ namespace tests\anchors;
 use deflou\components\anchors\Anchor;
 use deflou\components\applications\activities\Activity;
 use deflou\components\applications\Application;
-use deflou\components\plugins\events\EventAppDetermineByAnchor;
+use deflou\components\plugins\events\AppDetermineByAnchor;
 use deflou\components\plugins\events\EventDetermineByAnchor;
 
-use extas\components\http\TSnuffHttp;
+use deflou\components\plugins\triggers\ValidateTriggerByAnchor;
+use deflou\components\servers\requests\ApplicationRequest;
+use deflou\components\triggers\events\ApplicationEvent;
+use deflou\components\triggers\Trigger;
+use deflou\interfaces\anchors\IHasAnchorData;
 use extas\components\loggers\TSnuffLogging;
-use extas\components\THasMagicClass;
 
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
@@ -22,9 +25,7 @@ use PHPUnit\Framework\TestCase;
  */
 class PluginsTest extends TestCase
 {
-    use TSnuffHttp;
     use TSnuffLogging;
-    use THasMagicClass;
 
     protected function setUp(): void
     {
@@ -42,7 +43,8 @@ class PluginsTest extends TestCase
         $this->getMagicClass('anchors')->create(new Anchor([
             Anchor::FIELD__ID => 'test',
             Anchor::FIELD__CALLS_NUMBER => 10,
-            Anchor::FIELD__EVENT_NAME => 'test_event'
+            Anchor::FIELD__EVENT_NAME => 'test_event',
+            Anchor::FIELD__TYPE => Anchor::TYPE__GENERAL
         ]));
 
         $this->getMagicClass('activities')->create(new Activity([
@@ -64,41 +66,83 @@ class PluginsTest extends TestCase
 
     public function testAppDetermine()
     {
-        $plugin = new EventAppDetermineByAnchor([
-            EventAppDetermineByAnchor::FIELD__PSR_REQUEST => $this->getPsrRequest('.valid')
+        $plugin = new AppDetermineByAnchor();
+
+        $appRequest = new ApplicationRequest();
+        $appRequest->addParameterByValue($appRequest::PARAM__DATA, [
+            IHasAnchorData::FIELD__ANCHOR => 'test_anchor'
         ]);
+        $app  = $plugin($appRequest);
+        $this->assertNotEmpty($app, 'App is not determined');
 
-        $app = null;
-        $plugin($app);
-        $this->assertNotEmpty($app);
+        $appRequest = new ApplicationRequest();
+        $app = $plugin($appRequest);
 
-        $plugin = new EventAppDetermineByAnchor([
-            EventAppDetermineByAnchor::FIELD__PSR_REQUEST => $this->getPsrRequest('.invalid')
-        ]);
-
-        $app = null;
-        $plugin($app);
-        $this->assertEmpty($app);
+        $this->assertEmpty($app, 'Application determined: ' . print_r($app, true));
     }
 
     public function testEventDetermine()
     {
-        $plugin = new EventDetermineByAnchor([
-            EventAppDetermineByAnchor::FIELD__PSR_REQUEST => $this->getPsrRequest('.valid')
+        $plugin = new EventDetermineByAnchor();
+
+        $appRequest = new ApplicationRequest();
+        $appRequest->addParameterByValue($appRequest::PARAM__DATA, [
+            IHasAnchorData::FIELD__ANCHOR => 'test_anchor'
+        ]);
+        $event = $plugin($appRequest);
+        $this->assertNotEmpty($event, 'Event is not determined');
+
+        $appRequest = new ApplicationRequest();
+        $event = $plugin($appRequest);
+
+        $this->assertEmpty($event, 'Event determined: ' . print_r($event, true));
+    }
+
+    public function testValidateTrigger()
+    {
+        $plugin = new ValidateTriggerByAnchor();
+        $event = new ApplicationEvent();
+        $trigger = new Trigger([
+            Trigger::FIELD__EVENT_NAME => 'test_event',
+            Trigger::FIELD__NAME => 'test'
         ]);
 
-        $event = null;
-        $app = new Application();
-        $plugin($event, $app);
-        $this->assertNotEmpty($event);
+        $valid = $plugin($event, $trigger);
+        $this->assertFalse($valid, 'Incorrect trigger validation');
 
-        $plugin = new EventDetermineByAnchor([
-            EventAppDetermineByAnchor::FIELD__PSR_REQUEST => $this->getPsrRequest('.invalid')
-        ]);
+        $event->addParameterByValue($event::PARAM__ARTIFACTS, [IHasAnchorData::FIELD__ANCHOR => 'test']);
 
-        $event = null;
-        $app = new Application();
-        $plugin($event, $app);
-        $this->assertEmpty($event);
+        $valid = $plugin($event, $trigger);
+        $this->assertTrue($valid, 'Invalid trigger');
+
+        $this->getMagicClass('anchors')->create(new Anchor([
+            Anchor::FIELD__TYPE => Anchor::TYPE__TRIGGER,
+            Anchor::FIELD__ID => 'trigger_type',
+            Anchor::FIELD__TRIGGER_NAME => 'test'
+        ]));
+
+        $event = new ApplicationEvent();
+        $event->addParameterByValue(
+            $event::PARAM__ARTIFACTS,
+            [IHasAnchorData::FIELD__ANCHOR => 'trigger_type']
+        );
+
+        $valid = $plugin($event, $trigger);
+        $this->assertTrue($valid, 'Invalid trigger');
+
+        $this->getMagicClass('anchors')->create(new Anchor([
+            Anchor::FIELD__TYPE => Anchor::TYPE__PLAYER,
+            Anchor::FIELD__ID => 'player_type',
+            Anchor::FIELD__TRIGGER_NAME => 'test'
+        ]));
+
+        $event = new ApplicationEvent();
+        $event->addParameterByValue(
+            $event::PARAM__ARTIFACTS,
+            [IHasAnchorData::FIELD__ANCHOR => 'player_type']
+        );
+
+        $valid = $plugin($event, $trigger);
+        $this->assertTrue($valid, 'Invalid trigger');
     }
 }
