@@ -38,7 +38,7 @@ class PluginsTest extends TestCase
             ['applications', 'name', Application::class],
             ['activities', 'name', Activity::class]
         ]);
-        
+
         $this->getMagicClass('anchors')->create(new Anchor([
             Anchor::FIELD__ID => 'test',
             Anchor::FIELD__CALLS_NUMBER => 10,
@@ -71,13 +71,19 @@ class PluginsTest extends TestCase
         $appRequest->addParameterByValue($appRequest::PARAM__DATA, [
             IHasAnchorData::FIELD__ANCHOR => 'test_anchor'
         ]);
-        $app  = $plugin($appRequest);
-        $this->assertNotEmpty($app, 'App is not determined');
+        $appRequest  = $plugin($appRequest);
+        $this->assertNotEmpty(
+            $appRequest->getParameterValue($appRequest::PARAM__EVENT_APPLICATION),
+            'App is not determined'
+        );
 
         $appRequest = new ApplicationRequest();
-        $app = $plugin($appRequest);
+        $appRequest = $plugin($appRequest);
 
-        $this->assertEmpty($app, 'Application determined: ' . print_r($app, true));
+        $this->assertEmpty(
+            $appRequest->getParameterValue($appRequest::PARAM__EVENT_APPLICATION),
+            'Application determined: ' . print_r($appRequest, true)
+        );
     }
 
     public function testEventDetermine()
@@ -88,13 +94,20 @@ class PluginsTest extends TestCase
         $appRequest->addParameterByValue($appRequest::PARAM__DATA, [
             IHasAnchorData::FIELD__ANCHOR => 'test_anchor'
         ]);
-        $event = $plugin($appRequest);
-        $this->assertNotEmpty($event, 'Event is not determined');
+        
+        $appRequest = $plugin($appRequest);
+        $this->assertNotEmpty(
+            $appRequest->getParameterValue($appRequest::PARAM__EVENT),
+            'Event is not determined'
+        );
 
         $appRequest = new ApplicationRequest();
-        $event = $plugin($appRequest);
+        $appRequest = $plugin($appRequest);
 
-        $this->assertEmpty($event, 'Event determined: ' . print_r($event, true));
+        $this->assertEmpty(
+            $appRequest->getParameterValue($appRequest::PARAM__EVENT),
+            'Event determined: ' . print_r($appRequest, true)
+        );
     }
 
     public function testValidateTrigger()
