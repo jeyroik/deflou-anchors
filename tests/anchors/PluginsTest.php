@@ -69,7 +69,7 @@ class PluginsTest extends TestCase
 
         $appRequest = new ApplicationRequest();
         $appRequest->addParameterByValue($appRequest::PARAM__DATA, [
-            IHasAnchorData::FIELD__ANCHOR => 'test_anchor'
+            IHasAnchorData::FIELD__ANCHOR => 'test'
         ]);
         $appRequest  = $plugin($appRequest);
         $this->assertNotEmpty(
@@ -92,9 +92,9 @@ class PluginsTest extends TestCase
 
         $appRequest = new ApplicationRequest();
         $appRequest->addParameterByValue($appRequest::PARAM__DATA, [
-            IHasAnchorData::FIELD__ANCHOR => 'test_anchor'
+            IHasAnchorData::FIELD__ANCHOR => 'test'
         ]);
-        
+
         $appRequest = $plugin($appRequest);
         $this->assertNotEmpty(
             $appRequest->getParameterValue($appRequest::PARAM__EVENT),
