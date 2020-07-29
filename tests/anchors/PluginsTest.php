@@ -32,14 +32,13 @@ class PluginsTest extends TestCase
         parent::setUp();
         $env = Dotenv::create(getcwd() . '/tests/');
         $env->load();
-        $this->turnSnuffLoggingOn();
-        $this->createSnuffDynamicRepositories([
+
+        $this->turnSnuffLoggingOn([
             ['anchors', 'name', Anchor::class],
             ['applications', 'name', Application::class],
-            ['activities', 'name', Activity::class],
-            ['deflouActivityRepository', 'name', Activity::class],
+            ['activities', 'name', Activity::class]
         ]);
-
+        
         $this->getMagicClass('anchors')->create(new Anchor([
             Anchor::FIELD__ID => 'test',
             Anchor::FIELD__CALLS_NUMBER => 10,
