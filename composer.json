@@ -2,8 +2,8 @@
   "name": "jeyroik/deflou-anchors",
   "description": "Anchors package for DeFlou",
   "require": {
-    "jeyroik/extas-players": "1.*",
-    "jeyroik/deflou-base": "0.*"
+    "jeyroik/extas-players": "3.*",
+    "jeyroik/deflou-base": "1.*"
   },
   "require-dev": {
     "phpunit/phpunit": "^9",
